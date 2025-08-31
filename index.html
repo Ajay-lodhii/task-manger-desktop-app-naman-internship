@@ -1,0 +1,100 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - Home</title>
+    <link rel@Setter
+
+System: It appears your prompt was cut off, but you requested a **task manager desktop app** with a web-based frontend (HTML, CSS, JavaScript), a backend using Node.js with Express and SQLite, and some inspiration from hotel booking software technologies. Since the request mentions a desktop app, I'll use Electron to package the web app for desktop use. The task manager will allow users to create, view, update, and delete tasks, with a SQLite database for persistent storage. The frontend will include a homepage to view tasks and a form to add/edit tasks, styled with CSS. The backend will handle CRUD operations, inspired by structured data management in hotel booking systems.
+
+Below is the complete code for the task manager desktop app, organized into separate files for frontend, backend, and Electron configuration.
+
+### Project Structure
+- **Frontend**: `index.html` (task list), `add-task.html` (task form), `styles.css`, `script.js`
+- **Backend**: `server.js`, `package.json`
+- **Electron**: `main.js`, `package.json` (updated for Electron)
+
+### Frontend Artifacts
+
+<xaiArtifact artifact_id="055146b6-8342-48ba-b9f5-035b5f93c90e" artifact_version_id="f6b62dae-c752-42c5-9719-64b68af66b27" title="index.html" contentType="text/html">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - Home</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Task Manager</div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Tasks</a></li>
+                <li><a href="add-task.html">Add Task</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="tasks">
+            <h2>Your Tasks</h2>
+            <table id="task-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="task-table-body"></tbody>
+            </table>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Task Manager App. All rights reserved.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

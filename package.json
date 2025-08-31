@@ -1,0 +1,16 @@
+{
+    "name": "task-manager-app",
+    "version": "1.0.0",
+    "description": "Task manager desktop app with frontend and backend",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "server": "node server.js"
+    },
+    "dependencies": {
+        "express": "^4.17.1",
+        "sqlite3": "^5.0.2",
+        "cors": "^2.8.5",
+        "electron": "^19.0.0"
+    }
+}
